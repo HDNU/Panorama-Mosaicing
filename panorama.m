@@ -97,8 +97,10 @@ RGB=updateMarker(RGB,fig,'cyan');
 RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
+close;
 axes(handles.rightImage);
 imshow(RGB);
+
 
 % --- Executes on button press in pickRight.
 function pickRight_Callback(hObject, eventdata, handles)
@@ -116,8 +118,10 @@ RGB=updateMarker(RGB,fig,'cyan');
 RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
+close;
 axes(handles.leftImage);
 imshow(RGB);
+
 
 
 % --- Executes on button press in printPoints.
@@ -127,5 +131,5 @@ function printPoints_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global pointArray;
 for i=1:1:8
-    disp(pointArray(i));
+    pointArray{i}
 end
