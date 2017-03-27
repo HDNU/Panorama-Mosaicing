@@ -22,7 +22,7 @@ function varargout = panorama(varargin)
 
 % Edit the above text to modify the response to help panorama
 
-% Last Modified by GUIDE v2.5 26-Mar-2017 17:21:46
+% Last Modified by GUIDE v2.5 27-Mar-2017 18:35:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -77,6 +77,19 @@ imshow('CMU_left.jpg');
 axes(handles.leftImage);
 imshow('CMU_right.jpg');
 
+global homography;
+global v;
+global tform;
+
+
+
+
+
+% --- Executes on button press in pickLeft.
+function pickLeft_Callback(hObject, eventdata, handles)
+% hObject    handle to pickLeft (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 fig=figure;
 
 RGB=imread('CMU_left.jpg');
@@ -88,20 +101,67 @@ RGB=updateMarker(RGB,fig,'cyan');
 RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
+close;
 axes(handles.rightImage);
 imshow(RGB);
 
 
+% --- Executes on button press in pickRight.
+function pickRight_Callback(hObject, eventdata, handles)
+% hObject    handle to pickRight (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 fig=figure;
-
 RGB=imread('CMU_right.jpg');
 imshow('CMU_right.jpg');
+global pointArray;
+pointArray=pointArray(1:4);
 
 RGB=updateMarker(RGB,fig,'cyan');
 RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
-axes(handles.rightImage);
+close;
+axes(handles.leftImage);
 imshow(RGB);
 
-pointArray{1},pointArray{2},pointArray{3},pointArray{4}
+
+
+% --- Executes on button press in printPoints.
+function printPoints_Callback(hObject, eventdata, handles)
+% hObject    handle to printPoints (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global pointArray;
+for i=1:1:8
+    pointArray{i}
+end
+
+
+% --- Executes on button press in computeHomography.
+function computeHomography_Callback(hObject, eventdata, handles)
+% hObject    handle to computeHomography (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global homography;
+homography=returnHomography();
+
+% --- Executes on button press in projectLtoR.
+function projectLtoR_Callback(hObject, eventdata, handles)
+% hObject    handle to projectLtoR (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global v;      %equivalent to homography in 3*3 format
+im=imread('CMU_left.jpg');
+t = projective2d(v');
+imOut = imwarp(im,t);
+figure
+imshow(imOut);
+
+
+% --- Executes on button press in panoramaByHandInitialization.
+function panoramaByHandInitialization_Callback(hObject, eventdata, handles)
+% hObject    handle to panoramaByHandInitialization (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+panoramaByHand();

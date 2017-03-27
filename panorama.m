@@ -22,7 +22,7 @@ function varargout = panorama(varargin)
 
 % Edit the above text to modify the response to help panorama
 
-% Last Modified by GUIDE v2.5 26-Mar-2017 17:49:11
+% Last Modified by GUIDE v2.5 27-Mar-2017 21:49:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -77,6 +77,10 @@ imshow('CMU_left.jpg');
 axes(handles.leftImage);
 imshow('CMU_right.jpg');
 
+global homography;
+global w;
+global tform;
+
 
 
 
@@ -108,7 +112,6 @@ function pickRight_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 fig=figure;
-
 RGB=imread('CMU_right.jpg');
 imshow('CMU_right.jpg');
 global pointArray;
@@ -133,3 +136,48 @@ global pointArray;
 for i=1:1:8
     pointArray{i}
 end
+
+
+% --- Executes on button press in computeHomography.
+function computeHomography_Callback(hObject, eventdata, handles)
+% hObject    handle to computeHomography (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global homography;
+homography=returnHomography();
+figure;
+t = uitable();
+drawnow;
+set(t, 'Data', homography)
+
+% --- Executes on button press in projectLtoR.
+function projectLtoR_Callback(hObject, eventdata, handles)
+% hObject    handle to projectLtoR (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global homography;
+im=imread('CMU_left.jpg');
+homography=returnHomography();
+t = projective2d(homography');
+imOut = imwarp(im,t);
+figure
+imshow(imOut);
+
+
+% --- Executes on button press in panoramaByHandInitialization.
+function panoramaByHandInitialization_Callback(hObject, eventdata, handles)
+% hObject    handle to panoramaByHandInitialization (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global homography;
+homography=returnHomography();
+panoramaByHand();
+
+
+% --- Executes on button press in panoramaByMSAC.
+function panoramaByMSAC_Callback(hObject, eventdata, handles)
+% hObject    handle to panoramaByMSAC (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+panoramaByMSAC();
