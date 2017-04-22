@@ -1,5 +1,6 @@
 function panoramaByHand()
-I = imread('CMU_left.jpg');
+global leftImage rightImage;
+I = leftImage;
 tforms(2) = projective2d(eye(3));
 global homography;
 t = projective2d(homography');
@@ -67,7 +68,7 @@ yLimits = [yMin yMax];
 panoramaView = imref2d([height width], xLimits, yLimits);
 
 % Create the panorama.
-a={imread('CMU_right.jpg'),imread('CMU_left.jpg')};
+a={rightImage,leftImage};
 for i = 1:2
     
     I = a{i};   

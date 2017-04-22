@@ -22,7 +22,7 @@ function varargout = panorama(varargin)
 
 % Edit the above text to modify the response to help panorama
 
-% Last Modified by GUIDE v2.5 27-Mar-2017 21:49:58
+% Last Modified by GUIDE v2.5 21-Apr-2017 17:01:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -70,19 +70,51 @@ function varargout = panorama_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
+global leftImage rightImage;
 varargout{1} = handles.output;
-axes(handles.rightImage);
-imshow('CMU_left.jpg');
-
+leftImage = imread('CMU_left.jpg');
 axes(handles.leftImage);
-imshow('CMU_right.jpg');
+imshow(leftImage);
+
+rightImage = imread('CMU_right.jpg');
+axes(handles.rightImage);
+imshow(rightImage);
 
 global homography;
 global w;
 global tform;
 
 
+% --- Executes on button press in pickLeftImagePushButton.
+function pickLeftImagePushButton_Callback(hObject, eventdata, handles)
+% hObject    handle to pickLeftImagePushButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global leftImage;
+[path, Cancel] = imgetfile();
+if Cancel
+    msgbox(sprintf('Error'),'Error','Error');
+    return
+end
+leftImage = imread(path);
+axes(handles.leftImage);
+imshow(leftImage);
 
+
+% --- Executes on button press in pickRightImagePushButton.
+function pickRightImagePushButton_Callback(hObject, eventdata, handles)
+% hObject    handle to pickRightImagePushButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global rightImage;
+[path, Cancel] = imgetfile();
+if Cancel
+    msgbox(sprintf('Error'),'Error','Error');
+    return
+end
+rightImage = imread(path);
+axes(handles.rightImage);
+imshow(rightImage);
 
 
 % --- Executes on button press in pickLeft.
@@ -91,9 +123,9 @@ function pickLeft_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 fig=figure;
-
-RGB=imread('CMU_left.jpg');
-imshow('CMU_left.jpg');
+global leftImage;
+RGB= leftImage;
+imshow(leftImage);
 global pointArray;
 pointArray={};
 
@@ -102,7 +134,7 @@ RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
 close;
-axes(handles.rightImage);
+axes(handles.leftImage);
 imshow(RGB);
 
 
@@ -112,8 +144,9 @@ function pickRight_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 fig=figure;
-RGB=imread('CMU_right.jpg');
-imshow('CMU_right.jpg');
+global rightImage;
+RGB= rightImage;
+imshow(rightImage);
 global pointArray;
 pointArray=pointArray(1:4);
 
@@ -122,7 +155,7 @@ RGB=updateMarker(RGB,fig,'red');
 RGB=updateMarker(RGB,fig,'yellow');
 RGB=updateMarker(RGB,fig,'blue');
 close;
-axes(handles.leftImage);
+axes(handles.rightImage);
 imshow(RGB);
 
 
@@ -150,17 +183,17 @@ t = uitable();
 drawnow;
 set(t, 'Data', homography)
 
+
 % --- Executes on button press in projectLtoR.
 function projectLtoR_Callback(hObject, eventdata, handles)
 % hObject    handle to projectLtoR (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-global homography;
-im=imread('CMU_left.jpg');
+global homography leftImage;
 homography=returnHomography();
 t = projective2d(homography');
-imOut = imwarp(im,t);
+imOut = imwarp(leftImage,t);
 figure
 imshow(imOut);
 
@@ -168,7 +201,7 @@ imshow(imOut);
 % --- Executes on button press in panoramaByHandInitialization.
 function panoramaByHandInitialization_Callback(hObject, eventdata, handles)
 % hObject    handle to panoramaByHandInitialization (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
+% eventdata  reservedlk m - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global homography;
 homography=returnHomography();

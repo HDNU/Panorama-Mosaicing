@@ -7,7 +7,7 @@ function panoramaByMSAC()
 
 %% Overview
 % Feature detection and matching are powerful techniques used in many
-% computer vision applications such as image registration, tracking, and
+% computer vision applications such as image refgistration, tracking, and
 % object detection. In this example, feature based techniques are used to
 % automatically stitch together a set of images. The procedure for image
 % stitching is an extension of feature based image registration. Instead of
@@ -36,7 +36,8 @@ function panoramaByMSAC()
 % # Compute the transformation that maps $I(n)$ into the panorama image as $T(1) * ... * T(n-1) * T(n)$.
 
 % Read the first image from the image set.
-I = imread('CMU_left.jpg');
+global leftImage rightImage;
+I = leftImage;
 
 % Initialize features for I(1)
 grayImage = rgb2gray(I);
@@ -57,7 +58,7 @@ for n = 2:2
     featuresPrevious = features;
         
     % Read I(n).
-    I = imread('CMU_right.jpg');
+    I = rightImage;
     
     % Detect and extract SURF features for I(n).
     grayImage = rgb2gray(I);    
@@ -163,7 +164,7 @@ yLimits = [yMin yMax];
 panoramaView = imref2d([height width], xLimits, yLimits);
 
 % Create the panorama.
-a={imread('CMU_left.jpg'),imread('CMU_right.jpg')};
+a={leftImage,rightImage};
 for i = 1:2
     
     I = a{i};   
