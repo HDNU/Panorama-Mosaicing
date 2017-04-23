@@ -22,7 +22,7 @@ function varargout = panorama(varargin)
 
 % Edit the above text to modify the response to help panorama
 
-% Last Modified by GUIDE v2.5 21-Apr-2017 17:01:58
+% Last Modified by GUIDE v2.5 22-Apr-2017 16:34:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -214,3 +214,14 @@ function panoramaByMSAC_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 panoramaByMSAC();
+
+
+% --- Executes on button press in ImageSetPushbutton.
+function ImageSetPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to ImageSetPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global ImageFiles folder_name;
+folder_name = uigetdir;
+ImageFiles = dir([folder_name '/*.jpg']);
+panoramaByMSACImageSet();
