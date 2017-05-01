@@ -29,13 +29,7 @@ for i = 1:numel(tforms)
     tforms(i).T = Tinv.T * tforms(i).T;
 end
 
-%% Step 3 - Initialize the Panorama
-% Now, create an initial, empty, panorama into which all the images are
-% mapped. 
-% 
-% Use the |outputLimits| method to compute the minimum and maximum output
-% limits over all transformations. These values are used to automatically
-% compute the size of the panorama.
+
 
 for i = 1:numel(tforms)           
     [xlim(i,:), ylim(i,:)] = outputLimits(tforms(i), [1 imageSize(2)], [1 imageSize(1)]);
@@ -55,9 +49,7 @@ height = round(yMax - yMin);
 % Initialize the "empty" panorama.
 panorama = zeros([height width 3], 'like', I);
 
-%% Step 4 - Create the Panorama
-% Use |imwarp| to map images into the panorama and use
-% |vision.AlphaBlender| to overlay the images together.
+
 
 blender = vision.AlphaBlender('Operation', 'Binary mask', ...
     'MaskSource', 'Input port');  
